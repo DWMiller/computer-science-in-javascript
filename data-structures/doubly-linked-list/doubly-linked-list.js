@@ -27,7 +27,6 @@
  * @constructor
  */
 function DoublyLinkedList() {
-
     /**
      * Pointer to first item in the list.
      * @property _head
@@ -90,26 +89,58 @@ DoublyLinkedList.prototype = {
         this._length++;
     
     },
+    /**
+     * Prepends some data to the beginning of the list. 
+     * @param {variant} data The data to add to the list.
+     * @return {Void}
+     * @method addFirst
+     */
+    addFirst: function(data) {
+        //create a new item object, place data in
+        var node = {
+            data: data,
+            next: null,
+            prev: null
+        };
 
+        //special case: no items in the list yet
+        if (this._length === 0) {
+            this._head = node;
+            this._tail = node;
+        } else {
+            //attach to the tail node
+            this._head.prev = node;
+            node.next = this._head;
+            this._head = node;
+        }
+
+        //don't forget to update the count
+        this._length++;
+
+    },
     /**
      * Retrieves the data in the given position in the list.
      * @param {int} index The zero-based index of the item whose value 
      *      should be returned.
+     * @param {bool} getNode Indicates if a reference to the node itself is desired rather than it's data.'
      * @return {variant} The value in the "data" portion of the given item
      *      or null if the item doesn't exist.
+     *      or a reference to the node if getNode is set to true
      * @method item
      */
-    item: function(index){
+    item: function(index, getNode){
     
         //check for out-of-bounds values
-        if (index > -1 && index < this._length){
+        if (index > -1 && index < this._length) {
             var current = this._head,
-                i = 0;
-                
-            while(i++ < index){
-                current = current.next;            
+                    i = 0;
+
+            while (i++ < index) {
+                current = current.next;
             }
-        
+            if (getNode) {
+                return current;
+            }
             return current.data;
         } else {
             return null;
@@ -173,9 +204,26 @@ DoublyLinkedList.prototype = {
         } else {
             return null;
         }
-               
-    
-    },    
+    },            
+    /**
+     * Shortcut method to remove the first item in the list
+     * @return {variant} The data in the given position in the list or null if
+     *      the item doesn't exist.
+     * @method removeFirst
+     */
+    removeFirst: function() {
+       return this.remove(0);
+    },
+    /**
+     * Shortcut method to remove the last item in the list
+     * @return {variant} The data in the given position in the list or null if
+     *      the item doesn't exist.
+     * @method removeLast
+     */
+    removeLast: function() {
+        return this.remove(this._length - 1);
+    },               
+
     
    /**
      * Returns the number of items in the list.
